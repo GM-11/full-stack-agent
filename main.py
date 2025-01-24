@@ -1,6 +1,7 @@
 import os
 import inquirer
 from langchain_groq import ChatGroq
+
 from langchain_core.prompts import ChatPromptTemplate
 from langchain.chains import LLMChain
 import shutil
@@ -10,6 +11,8 @@ import subprocess
 from langchain_community.tools.tavily_search import TavilySearchResults
 from langchain_core.tools import Tool
 import datetime
+
+MODEL_NAME = "mixtral-8x7b-32768"
 
 class ProjectInitializer:
     def __init__(self):
@@ -25,15 +28,12 @@ class ProjectInitializer:
         if not tavily_api_key:
             raise ValueError("TAVILY_API_KEY not found in environment variables")
 
-        self.model = ChatGroq(model="mixtral-8x7b-32768")
+        self.model = ChatGroq(model=MODEL_NAME)
         self.project_type = None
         self.tech_stack = {}
         self.system_requirements = {}
-        self.search_tool = TavilySearchResults(max_results=3)
-        # self.memory = MemorySaver()
-        # self.tools = [TavilySearchResults(max_results=1)]
-        # self.agent_executor = create_react_agent(self.model, self.tools, checkpointer=self.memory)
-        #
+        self.search_tool = TavilySearchResults(max_results=1)
+
     def get_operating_system(self):
         """Ask user for their operating system."""
         questions = [
@@ -116,7 +116,7 @@ class ProjectInitializer:
                              ),
                 inquirer.List('backend',
                              message="Choose backend framework:",
-                             choices=['Node.js/Express', 'Python/Flask', 'Python/Django', 'Python/FastAPI', 'None'],
+                             choices=['Node.js/Express', 'Python3/Flask', 'Python3/Django', 'Python3/FastAPI', 'None'],
                              ),
                 inquirer.List('database',
                              message="Choose database:",
@@ -139,7 +139,7 @@ class ProjectInitializer:
                              ),
                 inquirer.List('backend',
                              message="Choose backend framework:",
-                             choices=['Node.js/Express', 'Python/Flask', 'Python/Django', 'Python/FastAPI', 'None'],
+                             choices=['Node.js/Express', 'Python3/Flask', 'Python3/Django', 'Python3/FastAPI', 'None'],
                              ),
                 inquirer.List('database',
                              message="Choose database:",
@@ -154,7 +154,7 @@ class ProjectInitializer:
             questions = [
                 inquirer.List('backend',
                              message="Choose backend framework:",
-                             choices=['Node.js/Express', 'Python/FastAPI', 'Python/Django REST', 'Go/Gin'],
+                             choices=['Node.js/Express', 'Python3/FastAPI', 'Python3/Django REST', 'Go/Gin'],
                              ),
                 inquirer.List('database',
                              message="Choose database:",
@@ -173,7 +173,7 @@ class ProjectInitializer:
                              ),
                 inquirer.List('backend',
                              message="Choose backend framework:",
-                             choices=['Node.js/Express', 'Python/Flask', 'Python/Django', 'Python/FastAPI', 'None'],
+                             choices=['Node.js/Express', 'Python3/Flask', 'Python3/Django', 'Python3/FastAPI', 'None'],
                              ),
                 inquirer.List('database',
                              message="Choose database:",
@@ -212,9 +212,9 @@ class ProjectInitializer:
             'Angular': ['node', 'npm', 'ng'],
             'Svelte': ['node', 'npm'],
             'Node.js/Express': ['node', 'npm'],
-            'Python/Flask': ['python', 'pip'],
-            'Python/Django': ['python', 'pip'],
-            'Python/FastAPI': ['python', 'pip'],
+            'Python3/Flask': ['python3', 'pip'],
+            'Python3/Django': ['python3', 'pip'],
+            'Python3/FastAPI': ['python3', 'pip'],
             'Go/Gin': ['go'],
             'MongoDB': ['mongo'],
             'PostgreSQL': ['psql'],
@@ -269,7 +269,6 @@ class ProjectInitializer:
             For a project that has both web frontend and backend:
                 - There should be seperate backend directories and create frontend using yarn (in case of web) in the root directory
                 - The backend should contain basic boilerplate code to start
-                - The frontend should contain a connection to the backend
 
             For a mobile app project with backend:
                 - Create mobile app using their respective SDK and commands in the root directory
@@ -287,21 +286,21 @@ class ProjectInitializer:
                 - Set up communication between desktop app and backend
                 - Include database setup if selected
 
-            The script should be production-ready and follow these guidelines:
-            - Include proper error handling and exit on failure
-            - Check for prerequisites before starting
-            - Show progress messages
-            - Use modern versions of packages
-            - Do not initialize git
-            - Use vite and yarn for creating web frontend and use `yarn create vite frontend --template {frontend_tech}` syntax for creating web frontend only
-            - For flutter, use `flutter create {name}` syntax
-            - If backend or database is None, skip those installations
-            - Use OS-specific commands for {operating_system}
+            Use vite and yarn for creating web frontend and use `yarn create vite frontend --template {frontend_tech}` syntax for creating web frontend only
+
+            Check for prerequisites before starting
+
+            For flutter, use `flutter create {name}` syntax
+
+            Use OS-specific commands for {operating_system}
             - For Windows, use PowerShell commands
             - For Linux/MacOS, use bash commands
-            - Include appropriate path separators for the target OS
-            - Use appropriate commands for the target OS. For example for overwriting files, use `echo` for Linux/MacOS
-            - Do not add any additional text or explanations
+
+            Use appropriate commands for the target OS. For example for overwriting files, use `echo` for Linux/MacOS
+
+            Do not add any additional text or explanations
+
+            If there is a backend, initialize the backend first with boilerplate code
 
             Provide only the script without any additional explanation or any other texts
             Thoroughly make sure that there are no logical or any sort of errors in the script
