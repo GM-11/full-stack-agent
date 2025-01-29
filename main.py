@@ -12,7 +12,8 @@ from langchain_community.tools.tavily_search import TavilySearchResults
 from langchain_core.tools import Tool
 import datetime
 
-MODEL_NAME = "mixtral-8x7b-32768"
+from constants import PROMPT, MODEL_NAME
+
 
 class ProjectInitializer:
     def __init__(self):
@@ -54,6 +55,7 @@ class ProjectInitializer:
 
         try:
             search_results = self.search_tool.invoke(query)
+            print(search_results)
 
             # If search_results is a string, return it as a single item in a list
             if isinstance(search_results, str):
@@ -97,7 +99,7 @@ class ProjectInitializer:
         questions = [
             inquirer.List('type',
                          message="What type of project do you want to create?",
-                         choices=['Web Application', 'Mobile App', 'API Service', 'Desktop Application'],
+                         choices=['Web Application', 'API Service'],
                          ),
         ]
         answers = inquirer.prompt(questions)
@@ -127,29 +129,6 @@ class ProjectInitializer:
                                 choices=['Docker', 'TypeScript', 'Redux', 'GraphQL', 'None'],
                                 ),
             ]
-        elif self.project_type == 'Mobile App':
-            questions = [
-                inquirer.List('framework',
-                             message="Choose mobile framework:",
-                             choices=['React Native', 'Flutter', 'Native Android/iOS'],
-                             ),
-                inquirer.List('state_management',
-                             message="Choose state management solution:",
-                             choices=['Redux', 'MobX', 'Provider', 'Riverpod', 'None'],
-                             ),
-                inquirer.List('backend',
-                             message="Choose backend framework:",
-                             choices=['Node.js/Express', 'Python3/Flask', 'Python3/Django', 'Python3/FastAPI', 'None'],
-                             ),
-                inquirer.List('database',
-                             message="Choose database:",
-                             choices=['MongoDB', 'PostgreSQL', 'MySQL', 'SQLite', 'None'],
-                             ),
-                inquirer.Checkbox('additional',
-                                message="Select additional tools:",
-                                choices=['Docker', 'Authentication', 'Push Notifications', 'File Upload', 'None'],
-                                ),
-            ]
         elif self.project_type == 'API Service':
             questions = [
                 inquirer.List('backend',
@@ -163,25 +142,6 @@ class ProjectInitializer:
                 inquirer.Checkbox('features',
                                 message="Select additional features:",
                                 choices=['Authentication', 'Swagger/OpenAPI', 'Rate Limiting', 'Caching', 'None'],
-                                ),
-            ]
-        elif self.project_type == 'Desktop Application':
-            questions = [
-                inquirer.List('framework',
-                             message="Choose desktop framework:",
-                             choices=['Electron', 'PyQt', 'Tkinter', 'Flutter Desktop'],
-                             ),
-                inquirer.List('backend',
-                             message="Choose backend framework:",
-                             choices=['Node.js/Express', 'Python3/Flask', 'Python3/Django', 'Python3/FastAPI', 'None'],
-                             ),
-                inquirer.List('database',
-                             message="Choose database:",
-                             choices=['MongoDB', 'PostgreSQL', 'MySQL', 'SQLite', 'None'],
-                             ),
-                inquirer.Checkbox('additional',
-                                message="Select additional tools:",
-                                choices=['Docker', 'Authentication', 'File System Access', 'System Tray Integration', 'None'],
                                 ),
             ]
 
@@ -219,12 +179,6 @@ class ProjectInitializer:
             'MongoDB': ['mongo'],
             'PostgreSQL': ['psql'],
             'MySQL': ['mysql'],
-            'React Native': ['node', 'npm', 'react-native'],
-            'Flutter': ['flutter'],
-            'Native Android/iOS': ['java', 'gradle'],  # For Android
-            'Electron': ['node', 'npm'],
-            'PyQt': ['python', 'pip'],
-            'Tkinter': ['python'],
             'Docker': ['docker'],
         }
 
@@ -250,64 +204,7 @@ class ProjectInitializer:
         """Generate script for project initialization based on OS."""
         tech_info_formatted = json.dumps(self.tech_info, indent=2) if hasattr(self, 'tech_info') else "{}"
 
-        prompt = ChatPromptTemplate.from_template(
-            """Generate a comprehensive script to initialize a {project_type} project named {project_name} with the following tech stack:
-            {tech_stack}
-
-            Target Operating System: {operating_system}
-
-            Latest best practices and initialization methods found:
-            {tech_info}
-
-            Requirements for the script:
-            1. Create proper project directory structure
-            2. Install all required dependencies
-            3. Set up configuration files (e.g., package.json, requirements.txt)
-            4. Create basic boilerplate code with modern best practices
-            5. Include error handling and checking
-
-            For a project that has both web frontend and backend:
-                - There should be seperate backend directories and create frontend using yarn (in case of web) in the root directory
-                - The backend should contain basic boilerplate code to start
-
-            For a mobile app project with backend:
-                - Create mobile app using their respective SDK and commands in the root directory
-                - Create a separate 'backend' directory if backend is selected
-                - Set up basic API connectivity between mobile app and backend
-                - Include database setup if selected
-
-            For an API service project:
-                - The API service should be created using their respective SDK and commands
-                - The API service should contain basic boilerplate code to start
-
-            For a desktop app project with backend:
-                - Create desktop app using their respective SDK and commands in the root directory
-                - Create a separate 'backend' directory if backend is selected
-                - Set up communication between desktop app and backend
-                - Include database setup if selected
-
-            Use vite and yarn for creating web frontend and use `yarn create vite frontend --template {frontend_tech}` syntax for creating web frontend only
-
-            Check for prerequisites before starting
-
-            For flutter, use `flutter create {name}` syntax
-
-            Use OS-specific commands for {operating_system}
-            - For Windows, use PowerShell commands
-            - For Linux/MacOS, use bash commands
-
-            Use appropriate commands for the target OS. For example for overwriting files, use `echo` for Linux/MacOS
-
-            Do not add any additional text or explanations
-
-            If there is a backend, initialize the backend first with boilerplate code
-
-            Provide only the script without any additional explanation or any other texts
-            Thoroughly make sure that there are no logical or any sort of errors in the script
-            The script should seamlessly execute without any errors or any logical errors
-            Make sure that script in the given OS (assuming all dependencies are installed) runs without any errors
-            """
-        )
+        prompt = ChatPromptTemplate.from_template(PROMPT)
 
         chain = prompt | self.model
         if self.tech_stack is None:
