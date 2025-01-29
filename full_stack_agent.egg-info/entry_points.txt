@@ -1,0 +1,2 @@
+[console_scripts]
+full-stack-agent = main:main

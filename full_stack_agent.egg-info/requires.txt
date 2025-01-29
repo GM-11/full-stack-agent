@@ -1,0 +1,6 @@
+langchain-groq
+langchain
+langchain-community
+inquirer
+python-dotenv
+tavily-python

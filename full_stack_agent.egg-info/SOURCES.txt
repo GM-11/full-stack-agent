@@ -1,0 +1,8 @@
+README.md
+setup.py
+full_stack_agent.egg-info/PKG-INFO
+full_stack_agent.egg-info/SOURCES.txt
+full_stack_agent.egg-info/dependency_links.txt
+full_stack_agent.egg-info/entry_points.txt
+full_stack_agent.egg-info/requires.txt
+full_stack_agent.egg-info/top_level.txt
