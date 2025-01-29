@@ -1,3 +1,3 @@
 # Full Stack Agent
 
-An agent that sets up any sort of project for you.
+A CLI tool for initializing full-stack projects with best practices
