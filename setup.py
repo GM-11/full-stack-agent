@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="full-stack-agent",
-    version="0.1.0",
+    version="0.2.0",
     author="Gopal Mathur",
     author_email="mathurgopal1001@gmail.com",
     description="A CLI tool for initializing full-stack projects with best practices",

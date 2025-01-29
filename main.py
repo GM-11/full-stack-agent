@@ -29,7 +29,7 @@ class ProjectInitializer:
         if not tavily_api_key:
             raise ValueError("TAVILY_API_KEY not found in environment variables")
 
-        self.model = ChatGroq(model=MODEL_NAME)
+        self.model = ChatGroq(model=MODEL_NAME, stop_sequences=[])
         self.project_type = None
         self.tech_stack = {}
         self.system_requirements = {}
@@ -55,9 +55,7 @@ class ProjectInitializer:
 
         try:
             search_results = self.search_tool.invoke(query)
-            print(search_results)
 
-            # If search_results is a string, return it as a single item in a list
             if isinstance(search_results, str):
                 return [search_results]
 

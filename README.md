@@ -26,24 +26,25 @@ Before using the Project Initializer, ensure you have:
 
 ## Installation 🔧
 
-1. Clone the repository:
+Install directly from PyPI:
+
 ```bash
-git clone [repository-url]
-cd project-initializer
+pip install full-stack-agent
 ```
 
-2. Create a virtual environment and activate it:
+## Configuration ⚙️
+
+Before first use, set up your API keys:
+
+1. Export as environment variables:
 ```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+export GROQ_API_KEY=your_groq_api_key
+export TAVILY_API_KEY=your_tavily_api_key
 ```
 
-3. Install required packages:
-```bash
-pip install -r requirements.txt
-```
+OR
 
-4. Create a `.env` file in the project root and add your API keys:
+2. Create a `.env` file in your working directory:
 ```
 GROQ_API_KEY=your_groq_api_key
 TAVILY_API_KEY=your_tavily_api_key
@@ -51,19 +52,19 @@ TAVILY_API_KEY=your_tavily_api_key
 
 ## Usage 💻
 
-1. Run the initializer:
+Simply run:
 ```bash
-python main.py
+full-stack-agent
 ```
 
-2. Follow the interactive prompts to:
-   - Enter your project name
-   - Select your operating system
-   - Choose project type
-   - Select desired tech stack
-   - Configure additional features
+Follow the interactive prompts to:
+1. Enter your project name
+2. Select your operating system
+3. Choose project type
+4. Select desired tech stack
+5. Configure additional features
 
-The tool will then:
+The tool will automatically:
 - Verify system requirements
 - Generate appropriate initialization scripts
 - Execute the scripts to set up your project
@@ -116,6 +117,24 @@ The tool includes comprehensive error handling for:
 - Invalid configurations
 - Script execution failures
 - API communication issues
+
+## Troubleshooting 🔧
+
+### Common Issues:
+
+1. **Missing Requirements**
+   - Ensure all required tools are installed for your chosen tech stack
+   - Verify API keys are properly set in environment or `.env` file
+
+2. **Script Execution Failures**
+   - Check system permissions
+   - Verify network connectivity for package downloads
+   - Ensure no conflicting processes are running
+
+3. **API Related Issues**
+   - Verify API key validity
+   - Check network connectivity
+   - Ensure API service status
 
 ## Contributing 🤝
 
